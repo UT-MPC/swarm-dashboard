@@ -1,0 +1,49 @@
+body{
+    color: #F3F4F5;
+    background-color: #1F2430;
+    font-family: 'Nunito Sans', sans-serif;
+  }
+.table {
+  color: #CCCAC2;
+  background-color: #47526640;
+}
+.navbar {
+  background-color: #63759926;
+}
+.navbar-brand {
+  color: #F3F4F5;
+  font-family: 'Merriweather Sans', sans-serif;
+  font-size: 23px;
+}
+#swarm-info-text, #swarm-graph-text {
+  color: #F3F4F5;
+  font-family: 'Merriweather Sans', sans-serif;
+  font-size: 20px;
+  padding: 10px;
+}
+
+#welcome {
+  margin: 40px;
+  text-align: center;
+}
+
+#devices-table tr:hover {
+  opacity: 0.65
+}
+
+#swarm-chart {
+  color: #CCCAC2 !important;
+}
+
+.nav-pills {
+  background-color: #171B24;
+}
+.nav-link {
+  color: #F3F4F5;
+}
+.nav-link:hover {
+  color: #695380;
+}
+.nav-pills a.active {
+  background-color: #DFBFFF !important;
+}
