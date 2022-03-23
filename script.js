@@ -1,3 +1,5 @@
+swarm_state_server_url = "http://44.198.60.25:5000/"
+// swarm_state_server_url = "http://3.83.149.203:5000/"
 
 function populateSwarmList(swarm_list, dict) {
     swarm_names = dict['swarm']
@@ -29,7 +31,7 @@ function populateSwarmList(swarm_list, dict) {
 function getSwarmList() {
     deff = $.ajax({
         type: "GET", 
-        url: "http://3.83.149.203:5000/swarm",
+        url: swarm_state_server_url + "swarm",
         async: true, 
         datatype: "json",
         success: function(result, status, xhr){
@@ -45,7 +47,7 @@ function getSwarmList() {
 function getSwarmInfo(name) {
     deff = $.ajax({
         type: "GET", 
-        url: "http://3.83.149.203:5000/devices",
+        url: swarm_state_server_url + "devices",
         async: true, 
         data: {
             'swarm-name': name
@@ -64,7 +66,7 @@ function getSwarmInfo(name) {
 function getSwarmMetric(name) {
     deff = $.ajax({
         type: "GET", 
-        url: "http://3.83.149.203:5000/swarm-metric",
+        url: swarm_state_server_url + "swarm-metric",
         async: true, 
         data: {
             'swarm-name': name
@@ -83,7 +85,7 @@ function getSwarmMetric(name) {
 function getRunningSwarms() {
     deff = $.ajax({
         type: "GET", 
-        url: "http://3.83.149.203:5000/check-running-swarm",
+        url: swarm_state_server_url + "check-running-swarm",
         async: true, 
         datatype: "json",
         success: function(result, status, xhr){
@@ -266,7 +268,8 @@ $(document).ready(function () {
     $(function(){
         $("#swarm").load("swarm.html", null, function() {
             var table = document.getElementById("devices");
-            setInterval(function() {
+
+            function getDevices() {
                 if (selected_swarm_name != null) {
                     document.getElementById('devices-table').removeAttribute('hidden');
                     document.getElementById('welcome').style.display = 'none';
@@ -276,6 +279,9 @@ $(document).ready(function () {
                         appendSwarmToTable(table, data['devices']);
                     });
                 }
+            }
+
+            function displayRunningSwarms() {
                 // check which swarm is currently running
                 getRunningSwarms().done(function(data) {
                     for (var i=0; i < data['runningSwarms'].length; i++) {
@@ -288,9 +294,13 @@ $(document).ready(function () {
                         }
                     }
                 });
+            }
 
-            }, 300000);
-            setInterval(function() {
+            getDevices();
+            setInterval(getDevices, 5000);
+            displayRunningSwarms();
+            setInterval(getRunningSwarms, 60000); // @TODO fix the latency issue
+            function updateChart() {
                 if (selected_swarm_name != null) {
                     // update chart
                     getSwarmMetric(selected_swarm_name).done(function(data) {
@@ -303,10 +313,10 @@ $(document).ready(function () {
                         myChart.update('active');
                         document.getElementById('graph-loading').style.display = 'none';
                     });
-
-                    
                 }
-            }, 30000);
+            }
+            setTimeout(updateChart, 2000);
+            setInterval(updateChart, 30000);
         });
     });
 });
