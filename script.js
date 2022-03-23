@@ -289,7 +289,7 @@ $(document).ready(function () {
                     }
                 });
 
-            }, 10000);
+            }, 300000);
             setInterval(function() {
                 if (selected_swarm_name != null) {
                     // update chart
@@ -306,7 +306,7 @@ $(document).ready(function () {
 
                     
                 }
-            }, 4000);
+            }, 30000);
         });
     });
 });
