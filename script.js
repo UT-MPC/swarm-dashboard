@@ -266,47 +266,47 @@ $(document).ready(function () {
     $(function(){
         $("#swarm").load("swarm.html", null, function() {
             var table = document.getElementById("devices");
-                setInterval(function() {
-                    if (selected_swarm_name != null) {
-                        document.getElementById('devices-table').removeAttribute('hidden');
-                        document.getElementById('welcome').style.display = 'none';
-                        document.getElementById('swarm-loading').style.display = 'none';
-                        // update swarm info
-                        getSwarmInfo(selected_swarm_name).done(function(data) {
-                            appendSwarmToTable(table, data['devices']);
-                        });
+            setInterval(function() {
+                if (selected_swarm_name != null) {
+                    document.getElementById('devices-table').removeAttribute('hidden');
+                    document.getElementById('welcome').style.display = 'none';
+                    document.getElementById('swarm-loading').style.display = 'none';
+                    // update swarm info
+                    getSwarmInfo(selected_swarm_name).done(function(data) {
+                        appendSwarmToTable(table, data['devices']);
+                    });
+                }
+                // check which swarm is currently running
+                getRunningSwarms().done(function(data) {
+                    for (var i=0; i < data['runningSwarms'].length; i++) {
+                        document.getElementById('spinner-'+data['runningSwarms'][i]).style.display = '';
                     }
-                    // check which swarm is currently running
-                    getRunningSwarms().done(function(data) {
-                        for (var i=0; i < data['runningSwarms'].length; i++) {
-                            document.getElementById('spinner-'+data['runningSwarms'][i]).style.display = '';
+                    for (var i=0; i < data['stoppedSwarms'].length; i++) {
+                        element = document.getElementById('spinner-'+data['stoppedSwarms'][i])
+                        if (element != null) {
+                            element.style.display = 'none';
                         }
-                        for (var i=0; i < data['stoppedSwarms'].length; i++) {
-                            element = document.getElementById('spinner-'+data['stoppedSwarms'][i])
-                            if (element != null) {
-                                element.style.display = 'none';
-                            }
+                    }
+                });
+
+            }, 10000);
+            setInterval(function() {
+                if (selected_swarm_name != null) {
+                    // update chart
+                    getSwarmMetric(selected_swarm_name).done(function(data) {
+                        myData = [];
+                        for (var i=0; i < data['times'].length; i++) {
+                            myData.push({x: data['times'][i], y: data['accs_list'][i]});
                         }
+                        myChart.data.datasets[0].label = selected_swarm_name;
+                        myChart.data.datasets[0].data = myData;
+                        myChart.update('active');
+                        document.getElementById('graph-loading').style.display = 'none';
                     });
 
-                }, 2000);
-                setInterval(function() {
-                    if (selected_swarm_name != null) {
-                        // update chart
-                        getSwarmMetric(selected_swarm_name).done(function(data) {
-                            myData = [];
-                            for (var i=0; i < data['times'].length; i++) {
-                                myData.push({x: data['times'][i], y: data['accs_list'][i]});
-                            }
-                            myChart.data.datasets[0].label = selected_swarm_name;
-                            myChart.data.datasets[0].data = myData;
-                            myChart.update('active');
-                            document.getElementById('graph-loading').style.display = 'none';
-                        });
-
-                        
-                    }
-                }, 4000);
+                    
+                }
+            }, 4000);
         });
     });
 });
