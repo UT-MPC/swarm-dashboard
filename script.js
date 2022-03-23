@@ -296,8 +296,8 @@ $(document).ready(function () {
                 });
             }
 
-            getDevices();
-            setInterval(getDevices, 5000);
+            setTimeout(getDevices, 2000);
+            // setInterval(getDevices, 5000);
             displayRunningSwarms();
             setInterval(getRunningSwarms, 60000); // @TODO fix the latency issue
             function updateChart() {
@@ -315,8 +315,8 @@ $(document).ready(function () {
                     });
                 }
             }
-            setTimeout(updateChart, 2000);
-            setInterval(updateChart, 30000);
+            setTimeout(updateChart, 5000);
+            // setInterval(updateChart, 30000);
         });
     });
 });
